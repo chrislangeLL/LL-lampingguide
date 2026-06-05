@@ -562,8 +562,8 @@
       const colW = (CW - 6) / 2;
       const LABELS = ['Manufacturer','Product Name','SKU','Kelvin','Lumens','Base / Shape','Qty per fixture'];
       const KEYS   = ['manufacturer','product','sku','kelvin','lumens','base','qty'];
-      const rowH = 7, imgH = colW * 0.38, imgW2 = (colW - 3) / 2;
-      const cardH = 7 + imgH + LABELS.length * rowH + 20;
+      const rowH = 6, imgH = colW * 0.28, imgW2 = (colW - 3) / 2;
+      const cardH = 6 + imgH + LABELS.length * rowH + 10;
 
       for (let i = 0; i < fixtures.length; i += 2) {
         newPageIfNeeded(cardH + 6);
@@ -614,7 +614,7 @@
           });
         });
 
-        y += cardH; rule(y); y += 6;
+        y += cardH; rule(y); y += 4;
       }
 
       // Footer
