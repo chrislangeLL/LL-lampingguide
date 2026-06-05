@@ -265,7 +265,7 @@
       const LABELS = ['Manufacturer','Product Name','SKU','Kelvin','Lumens','Base / Shape','Qty per fixture'];
       const KEYS   = ['manufacturer','product','sku','kelvin','lumens','base','qty'];
       const rowH = 7, imgH = colW * 0.38, imgW2 = (colW - 3) / 2;
-      const cardH = 7 + imgH + LABELS.length * rowH + 8;
+      const cardH = 7 + imgH + LABELS.length * rowH + 20;
 
       for (let i = 0; i < fixtures.length; i += 2) {
         newPageIfNeeded(cardH + 6);
@@ -300,15 +300,19 @@
           });
           cy += imgH + 4;
 
-          // Spec rows
+          // Spec rows — dynamic height to handle wrapping
           LABELS.forEach((lbl, li) => {
             const val = String(f[KEYS[li]] || '—');
-            if (li < LABELS.length-1) { doc.setDrawColor(...FAINT); doc.setLineWidth(0.1); doc.line(x, cy+rowH, x+colW, cy+rowH); }
+            const valMaxW = colW * 0.65;
+            doc.setFontSize(7.5);
+            const lines = doc.splitTextToSize(val, valMaxW);
+            const dynH = Math.max(rowH, lines.length * 4.2 + 3);
+            if (li < LABELS.length-1) { doc.setDrawColor(...FAINT); doc.setLineWidth(0.1); doc.line(x, cy+dynH, x+colW, cy+dynH); }
             doc.setFont('helvetica','normal'); doc.setFontSize(6.5); doc.setTextColor(...LIGHT);
-            doc.text(lbl.toUpperCase(), x, cy+rowH-1.5);
+            doc.text(lbl.toUpperCase(), x, cy + dynH/2 + 1.5);
             doc.setFontSize(7.5); doc.setTextColor(...INK);
-            doc.text(val, x+colW, cy+rowH-1.5, { align:'right', maxWidth: colW*0.58 });
-            cy += rowH;
+            doc.text(lines, x+colW, cy + dynH/2 + (lines.length > 1 ? -1.5 : 1.5), { align:'right' });
+            cy += dynH;
           });
         });
 
