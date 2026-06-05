@@ -572,8 +572,8 @@
     btn.textContent = 'Generating…'; btn.disabled = true;
     try {
       const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-      const PW = 210, PH = 297, M = 18, CW = PW - M * 2;
+      const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'letter' });
+      const PW = 215.9, PH = 279.4, M = 18, CW = PW - M * 2;
       let y = M;
       const INK = [30,28,25], MID = [92,89,85], LIGHT = [158,155,150], FAINT = [206,201,194], GOLD = [154,138,106];
 
@@ -638,12 +638,15 @@
             const valMaxW = colW * 0.62;
             doc.setFontSize(7);
             const lines = doc.splitTextToSize(val, valMaxW);
-            const dynH = Math.max(rowH, lines.length * 3.8 + 2.5);
-            if (li < LABELS.length-1) { doc.setDrawColor(...FAINT); doc.setLineWidth(0.1); doc.line(x, cy+dynH, x+colW, cy+dynH); }
+            const dynH = Math.max(rowH, lines.length * 4 + 3);
+            const midY = cy + dynH / 2;
+            // divider above each row except first
+            if (li > 0) { doc.setDrawColor(...FAINT); doc.setLineWidth(0.1); doc.line(x, cy, x + colW, cy); }
             doc.setFont('helvetica','normal'); doc.setFontSize(5.5); doc.setTextColor(...LIGHT);
-            doc.text(lbl.toUpperCase(), x, cy + dynH/2 + 1);
+            doc.text(lbl.toUpperCase(), x, midY + 1);
             doc.setFontSize(7); doc.setTextColor(...INK);
-            doc.text(lines, x+colW, cy + dynH/2 + (lines.length > 1 ? -1 : 1.2), { align:'right' });
+            const textY = lines.length > 1 ? midY - ((lines.length - 1) * 2) : midY + 1;
+            doc.text(lines, x + colW, textY, { align: 'right' });
             cy += dynH;
           });
         });
