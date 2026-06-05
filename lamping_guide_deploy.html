@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Decorative Lamping Guide — Lumber & Light</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --cream: #F5F3EE; --ink: #2A2824; --ink-mid: #6B6760; --ink-light: #A8A5A0;
+    --ink-faint: #D8D5D0; --border: rgba(42,40,36,0.15); --border-mid: rgba(42,40,36,0.25); --white: #FFFFFF;
+  }
+  body { font-family: 'Jost', sans-serif; font-weight: 300; background: var(--cream); color: var(--ink); min-height: 100vh; padding: 2rem; }
+  .guide { max-width: 900px; margin: 0 auto; background: var(--white); border: 0.5px solid var(--border); }
+  .guide-header { padding: 3.5rem 3rem 3rem; border-bottom: 0.5px solid var(--border); display: flex; justify-content: space-between; align-items: flex-end; }
+  .header-project h1 { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: 42px; line-height: 1.05; letter-spacing: 0.01em; color: var(--ink); margin-bottom: 8px; }
+  .header-project h1[contenteditable]:focus { outline: none; border-bottom: 0.5px solid var(--border-mid); }
+  .header-project .subtitle { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-mid); font-weight: 400; }
+  .header-meta { text-align: right; }
+  .header-meta .date { font-size: 12px; color: var(--ink-mid); letter-spacing: 0.06em; margin-bottom: 5px; }
+  .header-meta .brand { font-family: 'Cormorant Garamond', serif; font-size: 17px; font-weight: 400; font-style: italic; color: var(--ink-mid); }
+  .toolbar { padding: 0.85rem 3rem; display: flex; align-items: center; gap: 10px; border-bottom: 0.5px solid var(--border); background: var(--cream); }
+  .toolbar-btn { font-family: 'Jost', sans-serif; font-size: 10px; font-weight: 400; letter-spacing: 0.14em; text-transform: uppercase; padding: 6px 14px; border: 0.5px solid var(--border-mid); background: var(--white); color: var(--ink); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: background 0.15s, border-color 0.15s; }
+  .toolbar-btn:hover { background: var(--cream); border-color: var(--ink-light); }
+  .toolbar-btn.primary { background: var(--ink); color: var(--white); border-color: var(--ink); }
+  .toolbar-btn.primary:hover { opacity: 0.82; }
+  .toolbar-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .toolbar-btn i { font-size: 14px; }
+  .toolbar-spacer { flex: 1; }
+  .toolbar-hint { font-size: 10px; color: var(--ink-light); letter-spacing: 0.05em; font-style: italic; }
+  .fixture-grid { display: grid; grid-template-columns: 1fr 1fr; }
+  .fixture-card { padding: 2.25rem 3rem; border-bottom: 0.5px solid var(--border); border-right: 0.5px solid var(--border); position: relative; }
+  .fixture-card:nth-child(2n) { border-right: none; }
+  .fixture-card:hover .card-delete { opacity: 1; }
+  .card-delete { position: absolute; top: 12px; right: 12px; background: none; border: none; cursor: pointer; color: var(--ink-faint); font-size: 13px; opacity: 0; transition: opacity 0.15s, color 0.15s; padding: 4px; line-height: 1; }
+  .card-delete:hover { color: var(--ink); }
+  .fixture-id-input { font-family: 'Jost', sans-serif; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 400; color: var(--ink-mid); background: transparent; border: none; border-bottom: 0.5px solid transparent; outline: none; padding: 1px 0; margin-bottom: 1.1rem; display: block; width: 85%; transition: border-color 0.15s; }
+  .fixture-id-input:hover, .fixture-id-input:focus { border-bottom-color: var(--border-mid); }
+  .card-images { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 1.35rem; }
+  .img-slot { aspect-ratio: 4/3; background: var(--cream); border: 0.5px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; cursor: pointer; transition: border-color 0.15s; position: relative; overflow: hidden; }
+  .img-slot:hover { border-color: var(--ink-light); }
+  .img-slot span { font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-light); font-weight: 400; }
+  .img-slot i { font-size: 20px; color: var(--ink-faint); }
+  .img-slot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .img-delete { position: absolute; top: 4px; right: 4px; background: none; border: none; cursor: pointer; color: var(--ink-faint); font-size: 13px; line-height: 1; z-index: 2; opacity: 0; transition: opacity 0.15s, color 0.15s; padding: 2px; }
+  .img-delete:hover { color: var(--ink); }
+  .img-slot:hover .img-delete { opacity: 1; }
+  .spec-table { width: 100%; border-collapse: collapse; }
+  .spec-table tr { border-bottom: 0.5px solid var(--border); }
+  .spec-table tr:last-child { border-bottom: none; }
+  .spec-table td { padding: 5px 0; vertical-align: middle; }
+  .spec-label { font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-light); font-weight: 400; width: 40%; }
+  .spec-value { text-align: right; }
+  .spec-input { font-family: 'Jost', sans-serif; font-size: 12px; font-weight: 300; color: var(--ink); background: transparent; border: none; border-bottom: 0.5px solid transparent; text-align: right; width: 100%; padding: 1px 0; outline: none; transition: border-color 0.15s; }
+  .spec-input:hover, .spec-input:focus { border-bottom-color: var(--border-mid); }
+  .spec-input.qty { width: 56px; }
+  .add-row { padding: 1.5rem 3rem; border-bottom: 0.5px solid var(--border); }
+  .add-btn { font-family: 'Jost', sans-serif; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 400; color: var(--ink-light); background: none; border: 0.5px dashed var(--border-mid); padding: 9px 18px; cursor: pointer; display: flex; align-items: center; gap: 7px; transition: color 0.15s, border-color 0.15s; width: 100%; justify-content: center; }
+  .add-btn:hover { color: var(--ink); border-color: var(--ink-light); }
+  .add-btn i { font-size: 13px; }
+  .guide-footer { padding: 2.5rem 3rem 2rem; display: flex; justify-content: space-between; align-items: flex-end; }
+  .contact-grid { display: grid; grid-template-columns: auto auto; gap: 0 3rem; }
+  .contact-field { display: flex; flex-direction: column; margin-bottom: 12px; }
+  .contact-label { font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-light); margin-bottom: 3px; font-weight: 400; }
+  .contact-input { font-family: 'Jost', sans-serif; font-size: 12px; font-weight: 300; color: var(--ink-mid); background: transparent; border: none; border-bottom: 0.5px solid transparent; outline: none; padding: 1px 0; transition: border-color 0.15s, color 0.15s; width: 200px; }
+  .contact-input:hover, .contact-input:focus { border-bottom-color: var(--border-mid); color: var(--ink); }
+  .footer-brand { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-style: italic; color: var(--ink-light); font-weight: 400; }
+
+  @media print {
+    body { background: white; padding: 0; }
+    .guide { border: none; max-width: 100%; }
+    .toolbar, .add-row, .card-delete, .img-delete { display: none !important; }
+    .fixture-card { break-inside: avoid; }
+    .spec-input, .contact-input, .fixture-id-input { border-bottom: none !important; }
+    .img-slot i, .img-slot span { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="guide">
+  <div class="guide-header">
+    <div class="header-project">
+      <h1 contenteditable="true" spellcheck="false">Client Project Name</h1>
+      <p class="subtitle" contenteditable="true" spellcheck="false" style="outline:none;border-bottom:0.5px solid transparent;transition:border-color 0.15s;" onfocus="this.style.borderBottomColor='rgba(42,40,36,0.25)'" onblur="this.style.borderBottomColor='transparent'">Decorative Lamping Guide</p>
+    </div>
+    <div class="header-meta">
+      <p class="date" id="guide-date"></p>
+      <p class="brand">Lumber &amp; Light</p>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <button class="toolbar-btn" onclick="addFixture()"><i class="ti ti-plus"></i> Add fixture</button>
+    <span class="toolbar-spacer"></span>
+    <span class="toolbar-hint">Click any field to edit</span>
+    <button class="toolbar-btn primary" id="export-btn" onclick="exportPDF()"><i class="ti ti-download"></i> Export PDF</button>
+  </div>
+
+  <div class="fixture-grid" id="fixture-grid"></div>
+
+  <div class="add-row">
+    <button class="add-btn" onclick="addFixture()"><i class="ti ti-plus"></i> Add fixture</button>
+  </div>
+
+  <div class="guide-footer">
+    <div class="contact-grid">
+      <div class="contact-field">
+        <span class="contact-label">Point of contact</span>
+        <input class="contact-input" id="contact-name" type="text" value="Leah Frankl" placeholder="Name">
+      </div>
+      <div class="contact-field">
+        <span class="contact-label">Email</span>
+        <input class="contact-input" id="contact-email" type="text" value="leah@lumberandlight.com" placeholder="email@example.com">
+      </div>
+      <div class="contact-field">
+        <span class="contact-label">Telephone</span>
+        <input class="contact-input" id="contact-phone" type="text" value="(301) 938-4294" placeholder="(000) 000-0000">
+      </div>
+    </div>
+    <p class="footer-brand">Lumber &amp; Light</p>
+  </div>
+</div>
+
+<script>
+  document.getElementById('guide-date').textContent = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+  const defaultFixtures = [
+    { id: 'FF-12A/B', manufacturer: 'SATCO', product: 'S12430', sku: 'S12430', kelvin: '3000K', lumens: '1,500 Lumens', base: 'E26 / A19', qty: '1' },
+    { id: 'FF-14.1 — Small', manufacturer: 'Sylvania', product: '57022', sku: '40T4/G9/CL 120V', kelvin: '2900K', lumens: '510 Lumens', base: 'G9', qty: '1' },
+    { id: 'FF-14.2 — Medium', manufacturer: 'EmeryAllen', product: 'A19 7.0W DTW', sku: 'EA-A19-7.0W-E26-DTW-2718W', kelvin: '1800–2700K', lumens: '520 Lumens', base: 'E26 / A19', qty: '1' },
+    { id: 'FF-14.3 — Large', manufacturer: 'EmeryAllen', product: 'A19 7.0W DTW', sku: 'EA-A19-7.0W-E26-DTW-2718W', kelvin: '1800–2700K', lumens: '520 Lumens', base: 'E26 / A19', qty: '1' },
+    { id: 'FF-18', manufacturer: 'Tala', product: 'Candle E12 LED Bulb', sku: 'CAND-4W-2200K-E12-NT-120V', kelvin: '2200K', lumens: '300 Lumens', base: 'E12 / C11', qty: '1' },
+    { id: 'FF-37', manufacturer: 'Philips', product: '52551', sku: '8A19/PER/927-922/CL/G/E26/WGX 1FB T20', kelvin: '2200–2700K', lumens: '800 Lumens', base: 'E26 / A19', qty: '1' },
+  ];
+
+  const imgStore = {};
+  let fixtures = JSON.parse(JSON.stringify(defaultFixtures));
+
+  function esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function makeCard(f, i) {
+    const card = document.createElement('div');
+    card.className = 'fixture-card';
+    card.innerHTML = `
+      <button class="card-delete" onclick="removeFixture(${i})">✕</button>
+      <input class="fixture-id-input" type="text" value="${esc(f.id)}" placeholder="Fixture ID" onchange="fixtures[${i}].id=this.value">
+      <div class="card-images">
+        <div class="img-slot" id="fixture-img-${i}" onclick="uploadImg(${i},'fixture')">
+          <i class="ti ti-lamp"></i><span>Fixture</span>
+          <button class="img-delete" onclick="clearImg(event,${i},'fixture')">✕</button>
+        </div>
+        <div class="img-slot" id="bulb-img-${i}" onclick="uploadImg(${i},'bulb')">
+          <i class="ti ti-bulb"></i><span>Bulb</span>
+          <button class="img-delete" onclick="clearImg(event,${i},'bulb')">✕</button>
+        </div>
+      </div>
+      <table class="spec-table">
+        <tr><td class="spec-label">Manufacturer</td><td class="spec-value"><input class="spec-input" type="text" value="${esc(f.manufacturer)}" placeholder="—" onchange="fixtures[${i}].manufacturer=this.value"></td></tr>
+        <tr><td class="spec-label">Product Name</td><td class="spec-value"><input class="spec-input" type="text" value="${esc(f.product)}" placeholder="—" onchange="fixtures[${i}].product=this.value"></td></tr>
+        <tr><td class="spec-label">SKU</td><td class="spec-value"><input class="spec-input" type="text" value="${esc(f.sku)}" placeholder="—" onchange="fixtures[${i}].sku=this.value"></td></tr>
+        <tr><td class="spec-label">Kelvin</td><td class="spec-value"><input class="spec-input" type="text" value="${esc(f.kelvin)}" placeholder="—" onchange="fixtures[${i}].kelvin=this.value"></td></tr>
+        <tr><td class="spec-label">Lumens</td><td class="spec-value"><input class="spec-input" type="text" value="${esc(f.lumens)}" placeholder="—" onchange="fixtures[${i}].lumens=this.value"></td></tr>
+        <tr><td class="spec-label">Base / Shape</td><td class="spec-value"><input class="spec-input" type="text" value="${esc(f.base)}" placeholder="—" onchange="fixtures[${i}].base=this.value"></td></tr>
+        <tr><td class="spec-label">Qty per fixture</td><td class="spec-value"><input class="spec-input qty" type="number" value="${esc(f.qty)}" min="1" placeholder="1" onchange="fixtures[${i}].qty=this.value"></td></tr>
+      </table>`;
+    return card;
+  }
+
+  function renderGrid() {
+    const grid = document.getElementById('fixture-grid');
+    grid.innerHTML = '';
+    fixtures.forEach((f, i) => {
+      const card = makeCard(f, i);
+      grid.appendChild(card);
+      ['fixture','bulb'].forEach(type => {
+        const key = `${i}-${type}`;
+        if (imgStore[key]) {
+          const slot = document.getElementById(`${type}-img-${i}`);
+          if (slot) slot.innerHTML = `<img src="${imgStore[key]}" alt="${type}"><button class="img-delete" onclick="clearImg(event,${i},'${type}')">✕</button>`;
+        }
+      });
+    });
+  }
+
+  function addFixture() {
+    fixtures.push({ id: 'New Fixture', manufacturer: '', product: '', sku: '', kelvin: '', lumens: '', base: '', qty: '1' });
+    renderGrid();
+    const cards = document.querySelectorAll('.fixture-card');
+    const last = cards[cards.length - 1];
+    if (last) { last.scrollIntoView({ behavior: 'smooth', block: 'center' }); last.querySelector('.fixture-id-input')?.focus(); }
+  }
+
+  function removeFixture(i) {
+    fixtures.splice(i, 1);
+    const newStore = {};
+    Object.entries(imgStore).forEach(([k, v]) => {
+      const [idx, type] = k.split('-');
+      const n = parseInt(idx);
+      if (n < i) newStore[k] = v;
+      else if (n > i) newStore[`${n-1}-${type}`] = v;
+    });
+    Object.keys(imgStore).forEach(k => delete imgStore[k]);
+    Object.assign(imgStore, newStore);
+    renderGrid();
+  }
+
+  function uploadImg(i, type) {
+    const input = document.createElement('input');
+    input.type = 'file'; input.accept = 'image/*';
+    input.onchange = e => {
+      const file = e.target.files[0]; if (!file) return;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        imgStore[`${i}-${type}`] = ev.target.result;
+        const slot = document.getElementById(`${type}-img-${i}`);
+        if (slot) slot.innerHTML = `<img src="${ev.target.result}" alt="${type}"><button class="img-delete" onclick="clearImg(event,${i},'${type}')">✕</button>`;
+      };
+      reader.readAsDataURL(file);
+    };
+    input.click();
+  }
+
+  function clearImg(e, i, type) {
+    e.stopPropagation();
+    delete imgStore[`${i}-${type}`];
+    const slot = document.getElementById(`${type}-img-${i}`);
+    const icon = type === 'fixture' ? 'ti-lamp' : 'ti-bulb';
+    const label = type === 'fixture' ? 'Fixture' : 'Bulb';
+    if (slot) slot.innerHTML = `<i class="ti ${icon}"></i><span>${label}</span><button class="img-delete" onclick="clearImg(event,${i},'${type}')">✕</button>`;
+  }
+
+  async function exportPDF() {
+    const btn = document.getElementById('export-btn');
+    btn.textContent = 'Generating…'; btn.disabled = true;
+    try {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+      const PW = 210, PH = 297, M = 18, CW = PW - M * 2;
+      let y = M;
+      const INK = [42,40,36], MID = [107,103,96], LIGHT = [168,165,160], FAINT = [216,213,208];
+
+      function rule(yy) { doc.setDrawColor(...FAINT); doc.setLineWidth(0.15); doc.line(M, yy, PW-M, yy); }
+      function newPageIfNeeded(h) { if (y + h > PH - M) { doc.addPage(); y = M; } }
+
+      const projectName = document.querySelector('h1').textContent.trim() || 'Client Project Name';
+      const dateStr = document.getElementById('guide-date').textContent;
+
+      // Header
+      doc.setFont('helvetica','normal'); doc.setFontSize(28); doc.setTextColor(...INK);
+      doc.text(projectName, M, y + 10);
+      doc.setFontSize(7); doc.setTextColor(...MID);
+      doc.text('DECORATIVE LAMPING GUIDE', M, y + 17);
+      doc.setFontSize(8); doc.text(dateStr, PW-M, y+10, { align:'right' });
+      doc.setFont('helvetica','italic'); doc.setFontSize(11);
+      doc.text('Lumber & Light', PW-M, y+17, { align:'right' });
+      y += 26; rule(y); y += 8;
+
+      const colW = (CW - 6) / 2;
+      const LABELS = ['Manufacturer','Product Name','SKU','Kelvin','Lumens','Base / Shape','Qty per fixture'];
+      const KEYS   = ['manufacturer','product','sku','kelvin','lumens','base','qty'];
+      const rowH = 5.2, imgH = colW * 0.38, imgW2 = (colW - 3) / 2;
+      const cardH = 7 + imgH + LABELS.length * rowH + 2;
+
+      for (let i = 0; i < fixtures.length; i += 2) {
+        newPageIfNeeded(cardH + 6);
+        const pairs = [{ f: fixtures[i], x: M, idx: i }];
+        if (fixtures[i+1]) pairs.push({ f: fixtures[i+1], x: M + colW + 6, idx: i+1 });
+
+        pairs.forEach(({ f, x, idx }) => {
+          let cy = y;
+          // Fixture ID
+          doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(...LIGHT);
+          doc.text((f.id||'').toUpperCase(), x, cy + 4);
+          cy += 7;
+
+          // Images
+          ['fixture','bulb'].forEach((type, t) => {
+            const ix = x + t * (imgW2 + 3);
+            const b64 = imgStore[`${idx}-${type}`];
+            if (b64) {
+              try {
+                const fmt = b64.startsWith('data:image/png') ? 'PNG' : 'JPEG';
+                doc.addImage(b64, fmt, ix, cy, imgW2, imgH);
+              } catch(e) {
+                doc.setFillColor(245,243,238); doc.rect(ix, cy, imgW2, imgH, 'F');
+                doc.setDrawColor(...FAINT); doc.rect(ix, cy, imgW2, imgH, 'S');
+              }
+            } else {
+              doc.setFillColor(245,243,238); doc.rect(ix, cy, imgW2, imgH, 'F');
+              doc.setDrawColor(...FAINT); doc.setLineWidth(0.15); doc.rect(ix, cy, imgW2, imgH, 'S');
+              doc.setFontSize(6); doc.setTextColor(...LIGHT);
+              doc.text(type.toUpperCase(), ix + imgW2/2, cy + imgH/2 + 1, { align:'center' });
+            }
+          });
+          cy += imgH + 4;
+
+          // Spec rows
+          LABELS.forEach((lbl, li) => {
+            const val = String(f[KEYS[li]] || '—');
+            if (li < LABELS.length-1) { doc.setDrawColor(...FAINT); doc.setLineWidth(0.1); doc.line(x, cy+rowH, x+colW, cy+rowH); }
+            doc.setFont('helvetica','normal'); doc.setFontSize(6.5); doc.setTextColor(...LIGHT);
+            doc.text(lbl.toUpperCase(), x, cy+rowH-1.5);
+            doc.setFontSize(7.5); doc.setTextColor(...INK);
+            doc.text(val, x+colW, cy+rowH-1.5, { align:'right', maxWidth: colW*0.58 });
+            cy += rowH;
+          });
+        });
+
+        y += cardH; rule(y); y += 6;
+      }
+
+      // Footer
+      newPageIfNeeded(20);
+      rule(y); y += 6;
+      const name  = document.getElementById('contact-name').value;
+      const email = document.getElementById('contact-email').value;
+      const phone = document.getElementById('contact-phone').value;
+      doc.setFont('helvetica','normal'); doc.setFontSize(6); doc.setTextColor(...LIGHT);
+      doc.text('POINT OF CONTACT', M, y+3);
+      doc.text('EMAIL', M+55, y+3);
+      doc.text('TELEPHONE', M+110, y+3);
+      doc.setFontSize(8); doc.setTextColor(...MID);
+      doc.text(name, M, y+8); doc.text(email, M+55, y+8); doc.text(phone, M+110, y+8);
+      doc.setFont('helvetica','italic'); doc.setFontSize(11); doc.setTextColor(...LIGHT);
+      doc.text('Lumber & Light', PW-M, y+8, { align:'right' });
+
+      const filename = (projectName.replace(/\s+/g,'_')||'Lamping') + '_Lamping_Guide.pdf';
+      doc.save(filename);
+    } catch(err) {
+      alert('PDF export failed: ' + err.message);
+    }
+    btn.innerHTML = '<i class="ti ti-download"></i> Export PDF';
+    btn.disabled = false;
+  }
+
+  renderGrid();
+</script>
+</body>
+</html>
