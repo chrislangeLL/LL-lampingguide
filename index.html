@@ -264,8 +264,8 @@
       const colW = (CW - 6) / 2;
       const LABELS = ['Manufacturer','Product Name','SKU','Kelvin','Lumens','Base / Shape','Qty per fixture'];
       const KEYS   = ['manufacturer','product','sku','kelvin','lumens','base','qty'];
-      const rowH = 5.2, imgH = colW * 0.38, imgW2 = (colW - 3) / 2;
-      const cardH = 7 + imgH + LABELS.length * rowH + 2;
+      const rowH = 7, imgH = colW * 0.38, imgW2 = (colW - 3) / 2;
+      const cardH = 7 + imgH + LABELS.length * rowH + 8;
 
       for (let i = 0; i < fixtures.length; i += 2) {
         newPageIfNeeded(cardH + 6);
