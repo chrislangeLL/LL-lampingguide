@@ -215,6 +215,7 @@
   }
 
   .img-slot:hover { border-color: var(--gold-light); background: var(--parchment); }
+  .img-slot.drag-over { border-color: var(--gold); background: var(--parchment); outline: 1.5px solid var(--gold-light); }
 
   .img-slot span {
     font-size: 8px;
@@ -449,11 +450,19 @@
       <button class="card-delete" onclick="removeFixture(${i})">✕</button>
       <input class="fixture-id-input" type="text" value="${esc(f.id)}" placeholder="Fixture ID" onchange="fixtures[${i}].id=this.value">
       <div class="card-images">
-        <div class="img-slot" id="fixture-img-${i}" onclick="uploadImg(${i},'fixture')">
+        <div class="img-slot" id="fixture-img-${i}"
+          onclick="uploadImg(${i},'fixture')"
+          ondragover="handleDragOver(event)"
+          ondragleave="handleDragLeave(event)"
+          ondrop="handleDrop(event,${i},'fixture')">
           <i class="ti ti-lamp"></i><span>Fixture</span>
           <button class="img-delete" onclick="clearImg(event,${i},'fixture')">✕</button>
         </div>
-        <div class="img-slot" id="bulb-img-${i}" onclick="uploadImg(${i},'bulb')">
+        <div class="img-slot" id="bulb-img-${i}"
+          onclick="uploadImg(${i},'bulb')"
+          ondragover="handleDragOver(event)"
+          ondragleave="handleDragLeave(event)"
+          ondrop="handleDrop(event,${i},'bulb')">
           <i class="ti ti-bulb"></i><span>Bulb</span>
           <button class="img-delete" onclick="clearImg(event,${i},'bulb')">✕</button>
         </div>
@@ -506,6 +515,31 @@
     Object.keys(imgStore).forEach(k => delete imgStore[k]);
     Object.assign(imgStore, newStore);
     renderGrid();
+  }
+
+  function handleDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'copy';
+    e.currentTarget.classList.add('drag-over');
+  }
+
+  function handleDragLeave(e) {
+    e.currentTarget.classList.remove('drag-over');
+  }
+
+  function handleDrop(e, i, type) {
+    e.preventDefault();
+    e.stopPropagation();
+    e.currentTarget.classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (!file || !file.type.startsWith('image/')) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      imgStore[`${i}-${type}`] = ev.target.result;
+      const slot = document.getElementById(`${type}-img-${i}`);
+      if (slot) slot.innerHTML = `<img src="${ev.target.result}" alt="${type}"><button class="img-delete" onclick="clearImg(event,${i},'${type}')">✕</button>`;
+    };
+    reader.readAsDataURL(file);
   }
 
   function uploadImg(i, type) {
