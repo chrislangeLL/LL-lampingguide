@@ -70,14 +70,15 @@
     body { background: white; padding: 0; }
     .guide { border: none; box-shadow: none; max-width: 100%; }
     .toolbar, .add-row, .card-delete, .img-delete { display: none !important; }
-    .fixture-grid { display: block; }
-    .print-row { display: grid; grid-template-columns: 1fr 1fr; break-inside: avoid; page-break-inside: avoid; }
+    .fixture-grid { display: block !important; }
+    .print-page { display: grid; grid-template-columns: 1fr 1fr; break-inside: avoid; page-break-inside: avoid; break-before: auto; }
+    .print-page + .print-page { break-before: always; page-break-before: always; }
     .fixture-card { break-inside: avoid; page-break-inside: avoid; }
     .spec-input, .contact-input, .fixture-id-input { border-bottom: none !important; }
     .img-slot i, .img-slot span { display: none; }
     .img-slot img { display: block; }
-    .guide-header { page-break-after: avoid; break-after: avoid; }
-    .guide-footer { page-break-before: avoid; break-before: avoid; }
+    .guide-header { break-after: avoid; page-break-after: avoid; }
+    .guide-footer { break-before: avoid; page-break-before: avoid; }
   }
 </style>
 </head>
@@ -177,23 +178,17 @@
   function renderGrid() {
     const grid = document.getElementById('fixture-grid');
     grid.innerHTML = '';
-    for (let i = 0; i < fixtures.length; i += 2) {
-      const row = document.createElement('div');
-      row.className = 'print-row';
-      [i, i+1].forEach(idx => {
-        if (idx >= fixtures.length) return;
-        const card = makeCard(fixtures[idx], idx);
-        row.appendChild(card);
-        ['fixture','bulb'].forEach(type => {
-          const key = `${idx}-${type}`;
-          if (imgStore[key]) {
-            const slot = document.getElementById(`${type}-img-${idx}`);
-            if (slot) slot.innerHTML = `<img src="${imgStore[key]}" alt="${type}"><button class="img-delete" onclick="clearImg(event,${idx},'${type}')">✕</button>`;
-          }
-        });
+    fixtures.forEach((f, i) => {
+      const card = makeCard(f, i);
+      grid.appendChild(card);
+      ['fixture','bulb'].forEach(type => {
+        const key = `${i}-${type}`;
+        if (imgStore[key]) {
+          const slot = document.getElementById(`${type}-img-${i}`);
+          if (slot) slot.innerHTML = `<img src="${imgStore[key]}" alt="${type}"><button class="img-delete" onclick="clearImg(event,${i},'${type}')">✕</button>`;
+        }
       });
-      grid.appendChild(row);
-    }
+    });
   }
 
   function addFixture() {
@@ -338,6 +333,24 @@
     document.getElementById('contact-phone').value = '(301) 938-4294';
     renderGrid();
   }
+
+  // ── Print handling ────────────────────────────────────────────
+  window.addEventListener('beforeprint', () => {
+    const grid = document.getElementById('fixture-grid');
+    const cards = Array.from(grid.querySelectorAll('.fixture-card'));
+    grid.innerHTML = '';
+    // Group into pages of 4 (2 rows × 2 cols)
+    for (let i = 0; i < cards.length; i += 4) {
+      const page = document.createElement('div');
+      page.className = 'print-page';
+      cards.slice(i, i + 4).forEach(c => page.appendChild(c));
+      grid.appendChild(page);
+    }
+  });
+
+  window.addEventListener('afterprint', () => {
+    renderGrid();
+  });
 
   // ── Init ─────────────────────────────────────────────────────
   fixtures = JSON.parse(JSON.stringify(defaultFixtures));
