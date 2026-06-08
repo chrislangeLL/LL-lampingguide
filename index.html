@@ -387,9 +387,10 @@
   </div>
 
   <div class="toolbar">
+    <button class="toolbar-btn" onclick="saveGuide()"><i class="ti ti-device-floppy"></i> Save</button>
+    <button class="toolbar-btn" onclick="loadGuide()"><i class="ti ti-folder-open"></i> Load</button>
     <button class="toolbar-btn" onclick="addFixture()"><i class="ti ti-plus"></i> Add fixture</button>
     <span class="toolbar-spacer"></span>
-    <span class="toolbar-hint">Click any field to edit</span>
     <button class="toolbar-btn primary" id="export-btn" onclick="exportPDF()"><i class="ti ti-download"></i> Export PDF</button>
   </div>
 
@@ -491,7 +492,110 @@
 
   function addFixture() {
     fixtures.push({ id: 'New Fixture', manufacturer: '', product: '', sku: '', kelvin: '', lumens: '', base: '', qty: '1' });
+    // ── IndexedDB Persistence ────────────────────────────────────
+  const DB_NAME = 'll-lamping', DB_VERSION = 1, STORE = 'guide';
+  let db = null;
+
+  function openDB() {
+    return new Promise((resolve, reject) => {
+      if (db) return resolve(db);
+      const req = indexedDB.open(DB_NAME, DB_VERSION);
+      req.onupgradeneeded = e => e.target.result.createObjectStore(STORE);
+      req.onsuccess = e => { db = e.target.result; resolve(db); };
+      req.onerror = e => reject(e.target.error);
+    });
+  }
+
+  function dbSet(key, value) {
+    return openDB().then(db => new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE, 'readwrite');
+      const req = tx.objectStore(STORE).put(value, key);
+      req.onsuccess = () => resolve();
+      req.onerror = e => reject(e.target.error);
+    }));
+  }
+
+  function dbGet(key) {
+    return openDB().then(db => new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE, 'readonly');
+      const req = tx.objectStore(STORE).get(key);
+      req.onsuccess = e => resolve(e.target.result);
+      req.onerror = e => reject(e.target.error);
+    }));
+  }
+
+  let saveTimer = null;
+  function persistState() {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(async () => {
+      const state = {
+        projectName:  document.querySelector('h1').textContent.trim(),
+        contactName:  document.getElementById('contact-name').value,
+        contactEmail: document.getElementById('contact-email').value,
+        contactPhone: document.getElementById('contact-phone').value,
+        fixtures,
+        imgStore
+      };
+      try { await dbSet('state', state); }
+      catch(e) { console.warn('Auto-save failed:', e); }
+    }, 400);
+  }
+
+  async function restoreState() {
+    try {
+      const s = await dbGet('state');
+      if (!s) return false;
+      if (s.projectName) document.querySelector('h1').textContent = s.projectName;
+      if (s.contactName)  document.getElementById('contact-name').value  = s.contactName;
+      if (s.contactEmail) document.getElementById('contact-email').value = s.contactEmail;
+      if (s.contactPhone) document.getElementById('contact-phone').value = s.contactPhone;
+      if (s.fixtures) fixtures = s.fixtures;
+      if (s.imgStore) Object.assign(imgStore, s.imgStore);
+      return true;
+    } catch(e) { return false; }
+  }
+
+  function saveGuide() {
+    persistState();
+    const btn = document.querySelector('.toolbar-btn[onclick="saveGuide()"]');
+    const orig = btn.innerHTML;
+    btn.innerHTML = '<i class="ti ti-check"></i> Saved';
+    setTimeout(() => btn.innerHTML = orig, 1500);
+  }
+
+  function loadGuide() {
+    const input = document.createElement('input');
+    input.type = 'file'; input.accept = '.json';
+    input.onchange = e => {
+      const file = e.target.files[0]; if (!file) return;
+      const reader = new FileReader();
+      reader.onload = async ev => {
+        try {
+          const s = JSON.parse(ev.target.result);
+          if (s.projectName) document.querySelector('h1').textContent = s.projectName;
+          if (s.contactName)  document.getElementById('contact-name').value  = s.contactName;
+          if (s.contactEmail) document.getElementById('contact-email').value = s.contactEmail;
+          if (s.contactPhone) document.getElementById('contact-phone').value = s.contactPhone;
+          if (s.fixtures) fixtures = s.fixtures;
+          if (s.imgStore) { Object.keys(imgStore).forEach(k => delete imgStore[k]); Object.assign(imgStore, s.imgStore); }
+          renderGrid();
+          await persistState();
+        } catch(err) { alert('Could not load file: ' + err.message); }
+      };
+      reader.readAsText(file);
+    };
+    input.click();
+  }
+
+  // Auto-save on any input change
+  document.addEventListener('change', persistState);
+  document.addEventListener('input', persistState);
+
+  // ── Init ─────────────────────────────────────────────────────
+  restoreState().then(restored => {
+    if (!restored) fixtures = JSON.parse(JSON.stringify(defaultFixtures));
     renderGrid();
+  });
     const cards = document.querySelectorAll('.fixture-card');
     const last = cards[cards.length - 1];
     if (last) { last.scrollIntoView({ behavior: 'smooth', block: 'center' }); last.querySelector('.fixture-id-input')?.focus(); }
