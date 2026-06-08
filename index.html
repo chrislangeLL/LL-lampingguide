@@ -113,7 +113,7 @@
   <div class="toolbar">
     <button class="toolbar-btn" onclick="addFixture()"><i class="ti ti-plus"></i> Add Fixture</button>
     <button class="toolbar-btn" onclick="newGuide()"><i class="ti ti-file-plus"></i> New</button>
-    <button class="toolbar-btn" onclick="saveGuide()"><i class="ti ti-device-floppy"></i> Save</button>
+    <a id="save-link" class="toolbar-btn" style="text-decoration:none;" href="#" download="guide.lg"><i class="ti ti-device-floppy"></i> Save</a>
     <label class="toolbar-btn" for="load-input"><i class="ti ti-folder-open"></i> Load</label>
     <input id="load-input" type="file" accept=".lg" style="display:none" onchange="loadGuide(this)">
     <span class="toolbar-spacer"></span>
@@ -282,6 +282,22 @@
   }
 
   // ── Save / Load ───────────────────────────────────────────────
+  let currentBlobUrl = null;
+
+  function updateSaveLink() {
+    const state = getState();
+    const json = JSON.stringify(state);
+    const filename = (state.projectName || 'Lamping_Guide').replace(/[^a-z0-9_\-\s]/gi,'').trim().replace(/\s+/g,'_') + '.lg';
+    if (currentBlobUrl) URL.revokeObjectURL(currentBlobUrl);
+    currentBlobUrl = URL.createObjectURL(new Blob([json], { type: 'application/octet-stream' }));
+    const link = document.getElementById('save-link');
+    link.href = currentBlobUrl;
+    link.download = filename;
+  }
+
+  // Keep save link fresh on every edit
+  document.addEventListener('input', updateSaveLink);
+  document.addEventListener('change', updateSaveLink);
   function getState() {
     return {
       projectName:  document.querySelector('h1').textContent.trim(),
@@ -370,6 +386,7 @@
   // ── Init ─────────────────────────────────────────────────────
   fixtures = JSON.parse(JSON.stringify(defaultFixtures));
   renderGrid();
+  updateSaveLink();
 </script>
 </body>
 </html>
