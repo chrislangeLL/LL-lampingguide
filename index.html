@@ -389,6 +389,7 @@
   <div class="toolbar">
     <button class="toolbar-btn" onclick="saveGuide()"><i class="ti ti-device-floppy"></i> Save</button>
     <button class="toolbar-btn" onclick="loadGuide()"><i class="ti ti-folder-open"></i> Load</button>
+    <button class="toolbar-btn" onclick="newGuide()"><i class="ti ti-file-plus"></i> New</button>
     <button class="toolbar-btn" onclick="addFixture()"><i class="ti ti-plus"></i> Add fixture</button>
     <span class="toolbar-spacer"></span>
     <button class="toolbar-btn primary" id="export-btn" onclick="exportPDF()"><i class="ti ti-download"></i> Export PDF</button>
@@ -492,71 +493,40 @@
 
   function addFixture() {
     fixtures.push({ id: 'New Fixture', manufacturer: '', product: '', sku: '', kelvin: '', lumens: '', base: '', qty: '1' });
-    // ── IndexedDB Persistence ────────────────────────────────────
-  const DB_NAME = 'll-lamping', DB_VERSION = 1, STORE = 'guide';
-  let db = null;
+    // ── File-based Save / Load ───────────────────────────────────
 
-  function openDB() {
-    return new Promise((resolve, reject) => {
-      if (db) return resolve(db);
-      const req = indexedDB.open(DB_NAME, DB_VERSION);
-      req.onupgradeneeded = e => e.target.result.createObjectStore(STORE);
-      req.onsuccess = e => { db = e.target.result; resolve(db); };
-      req.onerror = e => reject(e.target.error);
-    });
+  function getState() {
+    return {
+      projectName:  document.querySelector('h1').textContent.trim(),
+      contactName:  document.getElementById('contact-name').value,
+      contactEmail: document.getElementById('contact-email').value,
+      contactPhone: document.getElementById('contact-phone').value,
+      fixtures,
+      imgStore
+    };
   }
 
-  function dbSet(key, value) {
-    return openDB().then(db => new Promise((resolve, reject) => {
-      const tx = db.transaction(STORE, 'readwrite');
-      const req = tx.objectStore(STORE).put(value, key);
-      req.onsuccess = () => resolve();
-      req.onerror = e => reject(e.target.error);
-    }));
-  }
-
-  function dbGet(key) {
-    return openDB().then(db => new Promise((resolve, reject) => {
-      const tx = db.transaction(STORE, 'readonly');
-      const req = tx.objectStore(STORE).get(key);
-      req.onsuccess = e => resolve(e.target.result);
-      req.onerror = e => reject(e.target.error);
-    }));
-  }
-
-  let saveTimer = null;
-  function persistState() {
-    clearTimeout(saveTimer);
-    saveTimer = setTimeout(async () => {
-      const state = {
-        projectName:  document.querySelector('h1').textContent.trim(),
-        contactName:  document.getElementById('contact-name').value,
-        contactEmail: document.getElementById('contact-email').value,
-        contactPhone: document.getElementById('contact-phone').value,
-        fixtures,
-        imgStore
-      };
-      try { await dbSet('state', state); }
-      catch(e) { console.warn('Auto-save failed:', e); }
-    }, 400);
-  }
-
-  async function restoreState() {
-    try {
-      const s = await dbGet('state');
-      if (!s) return false;
-      if (s.projectName) document.querySelector('h1').textContent = s.projectName;
-      if (s.contactName)  document.getElementById('contact-name').value  = s.contactName;
-      if (s.contactEmail) document.getElementById('contact-email').value = s.contactEmail;
-      if (s.contactPhone) document.getElementById('contact-phone').value = s.contactPhone;
-      if (s.fixtures) fixtures = s.fixtures;
-      if (s.imgStore) Object.assign(imgStore, s.imgStore);
-      return true;
-    } catch(e) { return false; }
+  function applyState(s) {
+    if (s.projectName) document.querySelector('h1').textContent = s.projectName;
+    if (s.contactName)  document.getElementById('contact-name').value  = s.contactName;
+    if (s.contactEmail) document.getElementById('contact-email').value = s.contactEmail;
+    if (s.contactPhone) document.getElementById('contact-phone').value = s.contactPhone;
+    if (s.fixtures) fixtures = s.fixtures;
+    if (s.imgStore) { Object.keys(imgStore).forEach(k => delete imgStore[k]); Object.assign(imgStore, s.imgStore); }
+    renderGrid();
   }
 
   function saveGuide() {
-    persistState();
+    const state = getState();
+    const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = (state.projectName || 'Lamping_Guide').replace(/[^a-z0-9_\-\s]/gi, '').trim().replace(/\s+/g, '_') + '.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
     const btn = document.querySelector('.toolbar-btn[onclick="saveGuide()"]');
     const orig = btn.innerHTML;
     btn.innerHTML = '<i class="ti ti-check"></i> Saved';
@@ -565,21 +535,13 @@
 
   function loadGuide() {
     const input = document.createElement('input');
-    input.type = 'file'; input.accept = '.json';
+    input.type = 'file'; input.accept = '.json,application/json';
     input.onchange = e => {
       const file = e.target.files[0]; if (!file) return;
       const reader = new FileReader();
-      reader.onload = async ev => {
+      reader.onload = ev => {
         try {
-          const s = JSON.parse(ev.target.result);
-          if (s.projectName) document.querySelector('h1').textContent = s.projectName;
-          if (s.contactName)  document.getElementById('contact-name').value  = s.contactName;
-          if (s.contactEmail) document.getElementById('contact-email').value = s.contactEmail;
-          if (s.contactPhone) document.getElementById('contact-phone').value = s.contactPhone;
-          if (s.fixtures) fixtures = s.fixtures;
-          if (s.imgStore) { Object.keys(imgStore).forEach(k => delete imgStore[k]); Object.assign(imgStore, s.imgStore); }
-          renderGrid();
-          await persistState();
+          applyState(JSON.parse(ev.target.result));
         } catch(err) { alert('Could not load file: ' + err.message); }
       };
       reader.readAsText(file);
@@ -587,15 +549,69 @@
     input.click();
   }
 
-  // Auto-save on any input change
-  document.addEventListener('change', persistState);
-  document.addEventListener('input', persistState);
+  function newGuide() {
+    if (!confirm('Start a new guide? Unsaved changes will be lost.')) return;
+    Object.keys(imgStore).forEach(k => delete imgStore[k]);
+    fixtures = JSON.parse(JSON.stringify(defaultFixtures));
+    document.querySelector('h1').textContent = 'Client Project Name';
+    document.getElementById('contact-name').value  = 'Leah Frankl';
+    document.getElementById('contact-email').value = 'leah@lumberandlight.com';
+    document.getElementById('contact-phone').value = '(301) 938-4294';
+    renderGrid();
+  }
+
+  // Compress images on upload/drop
+  function compressImage(dataUrl, maxW=800) {
+    return new Promise(resolve => {
+      const img = new Image();
+      img.onload = () => {
+        const scale = Math.min(1, maxW / img.width);
+        const c = document.createElement('canvas');
+        c.width = Math.round(img.width * scale);
+        c.height = Math.round(img.height * scale);
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        resolve(c.toDataURL('image/jpeg', 0.82));
+      };
+      img.onerror = () => resolve(dataUrl);
+      img.src = dataUrl;
+    });
+  }
+
+  window.uploadImg = function(i, type) {
+    const input = document.createElement('input');
+    input.type = 'file'; input.accept = 'image/*';
+    input.onchange = e => {
+      const file = e.target.files[0]; if (!file) return;
+      const reader = new FileReader();
+      reader.onload = async ev => {
+        const compressed = await compressImage(ev.target.result);
+        imgStore[`${i}-${type}`] = compressed;
+        const slot = document.getElementById(`${type}-img-${i}`);
+        if (slot) slot.innerHTML = `<img src="${compressed}" alt="${type}"><button class="img-delete" onclick="clearImg(event,${i},'${type}')">✕</button>`;
+      };
+      reader.readAsDataURL(file);
+    };
+    input.click();
+  };
+
+  window.handleDrop = async function(e, i, type) {
+    e.preventDefault(); e.stopPropagation();
+    e.currentTarget.classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (!file || !file.type.startsWith('image/')) return;
+    const reader = new FileReader();
+    reader.onload = async ev => {
+      const compressed = await compressImage(ev.target.result);
+      imgStore[`${i}-${type}`] = compressed;
+      const slot = document.getElementById(`${type}-img-${i}`);
+      if (slot) slot.innerHTML = `<img src="${compressed}" alt="${type}"><button class="img-delete" onclick="clearImg(event,${i},'${type}')">✕</button>`;
+    };
+    reader.readAsDataURL(file);
+  };
 
   // ── Init ─────────────────────────────────────────────────────
-  restoreState().then(restored => {
-    if (!restored) fixtures = JSON.parse(JSON.stringify(defaultFixtures));
-    renderGrid();
-  });
+  fixtures = JSON.parse(JSON.stringify(defaultFixtures));
+  renderGrid();
     const cards = document.querySelectorAll('.fixture-card');
     const last = cards[cards.length - 1];
     if (last) { last.scrollIntoView({ behavior: 'smooth', block: 'center' }); last.querySelector('.fixture-id-input')?.focus(); }
