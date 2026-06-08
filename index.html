@@ -388,7 +388,8 @@
 
   <div class="toolbar">
     <button class="toolbar-btn" onclick="saveGuide()"><i class="ti ti-device-floppy"></i> Save</button>
-    <button class="toolbar-btn" onclick="loadGuide()"><i class="ti ti-folder-open"></i> Load</button>
+    <label class="toolbar-btn" for="load-input"><i class="ti ti-folder-open"></i> Load</label>
+    <input id="load-input" type="file" accept=".json,application/json" style="display:none" onchange="loadGuide(this)">
     <button class="toolbar-btn" onclick="newGuide()"><i class="ti ti-file-plus"></i> New</button>
     <button class="toolbar-btn" onclick="addFixture()"><i class="ti ti-plus"></i> Add fixture</button>
     <span class="toolbar-spacer"></span>
@@ -518,35 +519,33 @@
 
   function saveGuide() {
     const state = getState();
-    const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
+    const json = JSON.stringify(state, null, 2);
+    const filename = (state.projectName || 'Lamping_Guide').replace(/[^a-z0-9_\-\s]/gi, '').trim().replace(/\s+/g, '_') + '.json';
+    // Use data URI instead of blob URL — works in Brave
+    const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(json);
     const a = document.createElement('a');
-    a.href = url;
-    a.download = (state.projectName || 'Lamping_Guide').replace(/[^a-z0-9_\-\s]/gi, '').trim().replace(/\s+/g, '_') + '.json';
+    a.href = dataUri;
+    a.download = filename;
+    a.style.display = 'none';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    URL.revokeObjectURL(url);
     const btn = document.querySelector('.toolbar-btn[onclick="saveGuide()"]');
     const orig = btn.innerHTML;
     btn.innerHTML = '<i class="ti ti-check"></i> Saved';
     setTimeout(() => btn.innerHTML = orig, 1500);
   }
 
-  function loadGuide() {
-    const input = document.createElement('input');
-    input.type = 'file'; input.accept = '.json,application/json';
-    input.onchange = e => {
-      const file = e.target.files[0]; if (!file) return;
-      const reader = new FileReader();
-      reader.onload = ev => {
-        try {
-          applyState(JSON.parse(ev.target.result));
-        } catch(err) { alert('Could not load file: ' + err.message); }
-      };
-      reader.readAsText(file);
+  function loadGuide(input) {
+    const file = input.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        applyState(JSON.parse(ev.target.result));
+        input.value = ''; // reset so same file can be loaded again
+      } catch(err) { alert('Could not load file: ' + err.message); }
     };
-    input.click();
+    reader.readAsText(file);
   }
 
   function newGuide() {
