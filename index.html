@@ -517,23 +517,42 @@
     renderGrid();
   }
 
-  function saveGuide() {
+  async function saveGuide() {
     const state = getState();
     const json = JSON.stringify(state, null, 2);
-    const filename = (state.projectName || 'Lamping_Guide').replace(/[^a-z0-9_\-\s]/gi, '').trim().replace(/\s+/g, '_') + '.json';
-    // Use data URI instead of blob URL — works in Brave
-    const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(json);
-    const a = document.createElement('a');
-    a.href = dataUri;
-    a.download = filename;
-    a.style.display = 'none';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    const btn = document.querySelector('.toolbar-btn[onclick="saveGuide()"]');
-    const orig = btn.innerHTML;
-    btn.innerHTML = '<i class="ti ti-check"></i> Saved';
-    setTimeout(() => btn.innerHTML = orig, 1500);
+    const filename = (state.projectName || 'Lamping_Guide').replace(/[^a-z0-9_\-\s]/gi,'').trim().replace(/\s+/g,'_') + '.json';
+
+    // Try File System Access API (Chrome/Brave/Edge — shows real Save dialog)
+    if (window.showSaveFilePicker) {
+      try {
+        const fh = await window.showSaveFilePicker({
+          suggestedName: filename,
+          types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }]
+        });
+        const writable = await fh.createWritable();
+        await writable.write(json);
+        await writable.close();
+        const btn = document.querySelector('.toolbar-btn[onclick="saveGuide()"]');
+        const orig = btn.innerHTML;
+        btn.innerHTML = '<i class="ti ti-check"></i> Saved';
+        setTimeout(() => btn.innerHTML = orig, 1500);
+        return;
+      } catch(e) {
+        if (e.name === 'AbortError') return; // user cancelled
+      }
+    }
+
+    // Fallback — open JSON in new tab, user presses Cmd/Ctrl+S
+    const w = window.open('', '_blank');
+    if (w) {
+      w.document.open();
+      w.document.write('<pre>' + json.replace(/</g,'&lt;') + '</pre>');
+      w.document.close();
+      w.document.title = filename;
+      alert('Press Cmd+S (Mac) or Ctrl+S (Windows) in the new tab to save the file.');
+    } else {
+      alert('Could not open save dialog. Please allow popups for this page.');
+    }
   }
 
   function loadGuide(input) {
