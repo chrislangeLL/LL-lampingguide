@@ -65,6 +65,22 @@
   .contact-input { font-family: 'Jost', sans-serif; font-size: 12px; font-weight: 300; color: var(--ink-mid); background: transparent; border: none; border-bottom: 0.5px solid transparent; outline: none; padding: 1px 0; transition: border-color 0.15s, color 0.15s; width: 220px; }
   .contact-input:hover, .contact-input:focus { border-bottom-color: var(--border-mid); color: var(--ink); }
   .footer-brand { font-family: 'Cormorant Garamond', serif; font-size: 17px; font-style: italic; color: var(--gold-light); font-weight: 400; letter-spacing: 0.02em; }
+
+  @media print {
+    body { background: white; padding: 0; }
+    .guide { border: none; box-shadow: none; max-width: 100%; }
+    .toolbar, .add-row, .card-delete, .img-delete { display: none !important; }
+    .fixture-grid { display: grid; grid-template-columns: 1fr 1fr; }
+    .fixture-card { break-inside: avoid; page-break-inside: avoid; }
+    .spec-input, .contact-input, .fixture-id-input { border-bottom: none !important; }
+    .img-slot i, .img-slot span { display: none; }
+    .img-slot img { display: block; }
+    /* Force 4 cards per page — 2 rows of 2 */
+    .fixture-card:nth-child(4n+1) { page-break-before: always; break-before: page; }
+    .fixture-card:nth-child(1) { page-break-before: avoid; break-before: avoid; }
+    .guide-header { page-break-after: avoid; break-after: avoid; }
+    .guide-footer { page-break-before: avoid; break-before: avoid; }
+  }
 </style>
 </head>
 <body>
