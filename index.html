@@ -70,14 +70,12 @@
     body { background: white; padding: 0; }
     .guide { border: none; box-shadow: none; max-width: 100%; }
     .toolbar, .add-row, .card-delete, .img-delete { display: none !important; }
-    .fixture-grid { display: grid; grid-template-columns: 1fr 1fr; }
+    .fixture-grid { display: block; }
+    .print-row { display: grid; grid-template-columns: 1fr 1fr; break-inside: avoid; page-break-inside: avoid; }
     .fixture-card { break-inside: avoid; page-break-inside: avoid; }
     .spec-input, .contact-input, .fixture-id-input { border-bottom: none !important; }
     .img-slot i, .img-slot span { display: none; }
     .img-slot img { display: block; }
-    /* Force 4 cards per page — 2 rows of 2 */
-    .fixture-card:nth-child(4n+1) { page-break-before: always; break-before: page; }
-    .fixture-card:nth-child(1) { page-break-before: avoid; break-before: avoid; }
     .guide-header { page-break-after: avoid; break-after: avoid; }
     .guide-footer { page-break-before: avoid; break-before: avoid; }
   }
@@ -179,17 +177,23 @@
   function renderGrid() {
     const grid = document.getElementById('fixture-grid');
     grid.innerHTML = '';
-    fixtures.forEach((f, i) => {
-      const card = makeCard(f, i);
-      grid.appendChild(card);
-      ['fixture','bulb'].forEach(type => {
-        const key = `${i}-${type}`;
-        if (imgStore[key]) {
-          const slot = document.getElementById(`${type}-img-${i}`);
-          if (slot) slot.innerHTML = `<img src="${imgStore[key]}" alt="${type}"><button class="img-delete" onclick="clearImg(event,${i},'${type}')">✕</button>`;
-        }
+    for (let i = 0; i < fixtures.length; i += 2) {
+      const row = document.createElement('div');
+      row.className = 'print-row';
+      [i, i+1].forEach(idx => {
+        if (idx >= fixtures.length) return;
+        const card = makeCard(fixtures[idx], idx);
+        row.appendChild(card);
+        ['fixture','bulb'].forEach(type => {
+          const key = `${idx}-${type}`;
+          if (imgStore[key]) {
+            const slot = document.getElementById(`${type}-img-${idx}`);
+            if (slot) slot.innerHTML = `<img src="${imgStore[key]}" alt="${type}"><button class="img-delete" onclick="clearImg(event,${idx},'${type}')">✕</button>`;
+          }
+        });
       });
-    });
+      grid.appendChild(row);
+    }
   }
 
   function addFixture() {
