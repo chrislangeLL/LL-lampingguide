@@ -10,366 +10,61 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --cream: #F7F5F0;
-    --parchment: #EFECE5;
-    --ink: #1E1C19;
-    --ink-mid: #5C5955;
-    --ink-light: #9E9B96;
-    --ink-faint: #CEC9C2;
-    --gold: #9A8A6A;
-    --gold-light: #C4B49A;
-    --border: rgba(30,28,25,0.1);
-    --border-mid: rgba(30,28,25,0.2);
-    --white: #FDFCFA;
+    --cream: #F7F5F0; --parchment: #EFECE5; --ink: #1E1C19; --ink-mid: #5C5955;
+    --ink-light: #9E9B96; --ink-faint: #CEC9C2; --gold: #9A8A6A; --gold-light: #C4B49A;
+    --border: rgba(30,28,25,0.1); --border-mid: rgba(30,28,25,0.2); --white: #FDFCFA;
   }
-
-  body {
-    font-family: 'Jost', sans-serif;
-    font-weight: 300;
-    background: var(--parchment);
-    color: var(--ink);
-    min-height: 100vh;
-    padding: 2.5rem;
-  }
-
-  .guide {
-    max-width: 920px;
-    margin: 0 auto;
-    background: var(--white);
-    border: 0.5px solid var(--border);
-    box-shadow: 0 4px 40px rgba(30,28,25,0.07), 0 1px 4px rgba(30,28,25,0.04);
-  }
-
-  /* Header */
-  .guide-header {
-    padding: 4rem 3.5rem 3rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    background: var(--white);
-  }
-
-  .header-project h1 {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 300;
-    font-size: 46px;
-    line-height: 1.0;
-    letter-spacing: 0.015em;
-    color: var(--ink);
-    margin-bottom: 10px;
-  }
-
+  body { font-family: 'Jost', sans-serif; font-weight: 300; background: var(--parchment); color: var(--ink); min-height: 100vh; padding: 2.5rem; }
+  .guide { max-width: 920px; margin: 0 auto; background: var(--white); border: 0.5px solid var(--border); box-shadow: 0 4px 40px rgba(30,28,25,0.07), 0 1px 4px rgba(30,28,25,0.04); }
+  .guide-header { padding: 4rem 3.5rem 3rem; display: flex; justify-content: space-between; align-items: flex-end; background: var(--white); }
+  .header-project h1 { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: 46px; line-height: 1.0; letter-spacing: 0.015em; color: var(--ink); margin-bottom: 10px; }
   .header-project h1[contenteditable]:focus { outline: none; border-bottom: 0.5px solid var(--border-mid); }
-
-  .header-project .subtitle {
-    font-size: 9px;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    color: var(--gold);
-    font-weight: 400;
-  }
-
+  .header-project .subtitle { font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold); font-weight: 400; }
   .header-meta { text-align: right; }
-
-  .header-meta .date {
-    font-size: 11px;
-    color: var(--ink-light);
-    letter-spacing: 0.08em;
-    margin-bottom: 6px;
-    font-weight: 300;
-  }
-
-  .header-meta .brand {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 18px;
-    font-weight: 400;
-    font-style: italic;
-    color: var(--gold);
-    letter-spacing: 0.02em;
-  }
-
-  /* Toolbar */
-  .toolbar {
-    padding: 0.9rem 3.5rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    border-bottom: 0.5px solid var(--border);
-    background: var(--cream);
-  }
-
-  .toolbar-btn {
-    font-family: 'Jost', sans-serif;
-    font-size: 9px;
-    font-weight: 400;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    padding: 7px 16px;
-    border: 0.5px solid var(--border-mid);
-    background: var(--white);
-    color: var(--ink-mid);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    transition: all 0.18s;
-  }
-
-  .toolbar-btn:hover { background: var(--white); border-color: var(--gold-light); color: var(--ink); }
-
-  .toolbar-btn.primary {
-    background: var(--ink);
-    color: var(--white);
-    border-color: var(--ink);
-    letter-spacing: 0.16em;
-  }
-
-  .toolbar-btn.primary:hover { background: var(--gold); border-color: var(--gold); }
-  .toolbar-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  .header-meta .date { font-size: 11px; color: var(--ink-light); letter-spacing: 0.08em; margin-bottom: 6px; font-weight: 300; }
+  .header-meta .brand { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 400; font-style: italic; color: var(--gold); letter-spacing: 0.02em; }
+  .toolbar { padding: 0.9rem 3.5rem; display: flex; align-items: center; gap: 10px; background: var(--cream); }
+  .toolbar-btn { font-family: 'Jost', sans-serif; font-size: 9px; font-weight: 400; letter-spacing: 0.18em; text-transform: uppercase; padding: 7px 16px; border: 0.5px solid var(--border-mid); background: var(--white); color: var(--ink-mid); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.18s; text-decoration: none; }
+  .toolbar-btn:hover { border-color: var(--gold-light); color: var(--ink); }
   .toolbar-btn i { font-size: 13px; }
   .toolbar-spacer { flex: 1; }
-
-  .toolbar-hint {
-    font-size: 10px;
-    color: var(--ink-faint);
-    letter-spacing: 0.04em;
-    font-style: italic;
-  }
-
-  /* Fixture grid */
+  .toolbar-hint { font-size: 10px; color: var(--ink-faint); letter-spacing: 0.04em; font-style: italic; }
   .fixture-grid { display: grid; grid-template-columns: 1fr 1fr; }
-
-  .fixture-card {
-    padding: 2.5rem 3.5rem;
-    position: relative;
-    transition: background 0.2s;
-  }
+  .fixture-card { padding: 2.5rem 3.5rem; position: relative; transition: background 0.2s; }
   .fixture-card:hover { background: #FEFDFB; }
   .fixture-card:hover .card-delete { opacity: 1; }
-
-  .card-delete {
-    position: absolute;
-    top: 14px;
-    right: 14px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--ink-faint);
-    font-size: 11px;
-    opacity: 0;
-    transition: opacity 0.15s, color 0.15s;
-    padding: 4px;
-    line-height: 1;
-    letter-spacing: 0;
-  }
-
+  .card-delete { position: absolute; top: 14px; right: 14px; background: none; border: none; cursor: pointer; color: var(--ink-faint); font-size: 11px; opacity: 0; transition: opacity 0.15s, color 0.15s; padding: 4px; line-height: 1; }
   .card-delete:hover { color: var(--ink); }
-
-  .fixture-id-input {
-    font-family: 'Jost', sans-serif;
-    font-size: 9.5px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    font-weight: 500;
-    color: var(--ink);
-    background: transparent;
-    border: none;
-    border-bottom: 0.5px solid transparent;
-    outline: none;
-    padding: 1px 0;
-    margin-bottom: 1.25rem;
-    display: block;
-    width: 85%;
-    transition: border-color 0.15s;
-  }
-
+  .fixture-id-input { font-family: 'Jost', sans-serif; font-size: 9.5px; letter-spacing: 0.22em; text-transform: uppercase; font-weight: 500; color: var(--ink); background: transparent; border: none; border-bottom: 0.5px solid transparent; outline: none; padding: 1px 0; margin-bottom: 1.25rem; display: block; width: 85%; transition: border-color 0.15s; }
   .fixture-id-input:hover, .fixture-id-input:focus { border-bottom-color: var(--border-mid); }
-
-  /* Images */
-  .card-images {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-bottom: 1.5rem;
-  }
-
-  .img-slot {
-    aspect-ratio: 4/3;
-    background: var(--cream);
-    border: 0.5px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    cursor: pointer;
-    transition: border-color 0.2s, background 0.2s;
-    position: relative;
-    overflow: hidden;
-  }
-
+  .card-images { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 1.5rem; }
+  .img-slot { aspect-ratio: 4/3; background: var(--cream); border: 0.5px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; cursor: pointer; transition: border-color 0.2s, background 0.2s; position: relative; overflow: hidden; }
   .img-slot:hover { border-color: var(--gold-light); background: var(--parchment); }
   .img-slot.drag-over { border-color: var(--gold); background: var(--parchment); outline: 1.5px solid var(--gold-light); }
-
-  .img-slot span {
-    font-size: 8px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
-    font-weight: 400;
-  }
-
+  .img-slot span { font-size: 8px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-faint); font-weight: 400; }
   .img-slot i { font-size: 18px; color: var(--ink-faint); }
-
   .img-slot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: var(--cream); }
-
-  .img-delete {
-    position: absolute;
-    top: 4px;
-    right: 4px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--ink-faint);
-    font-size: 11px;
-    line-height: 1;
-    z-index: 2;
-    opacity: 0;
-    transition: opacity 0.15s, color 0.15s;
-    padding: 2px;
-  }
-
+  .img-delete { position: absolute; top: 4px; right: 4px; background: none; border: none; cursor: pointer; color: var(--ink-faint); font-size: 11px; line-height: 1; z-index: 2; opacity: 0; transition: opacity 0.15s, color 0.15s; padding: 2px; }
   .img-delete:hover { color: var(--ink); }
   .img-slot:hover .img-delete { opacity: 1; }
-
-  /* Spec table */
   .spec-table { width: 100%; border-collapse: collapse; }
-  .spec-table tr { border-bottom: none; }
-  .spec-table tr:last-child { border-bottom: none; }
   .spec-table td { padding: 6px 0; vertical-align: middle; }
-
-  .spec-label {
-    font-size: 8.5px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--ink-light);
-    font-weight: 400;
-    width: 40%;
-  }
-
+  .spec-label { font-size: 8.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-light); font-weight: 400; width: 40%; }
   .spec-value { text-align: right; }
-
-  .spec-input {
-    font-family: 'Jost', sans-serif;
-    font-size: 12px;
-    font-weight: 300;
-    color: var(--ink);
-    background: transparent;
-    border: none;
-    border-bottom: 0.5px solid transparent;
-    text-align: right;
-    width: 100%;
-    padding: 1px 0;
-    outline: none;
-    transition: border-color 0.15s;
-  }
-
+  .spec-input { font-family: 'Jost', sans-serif; font-size: 12px; font-weight: 300; color: var(--ink); background: transparent; border: none; border-bottom: 0.5px solid transparent; text-align: right; width: 100%; padding: 1px 0; outline: none; transition: border-color 0.15s; }
   .spec-input:hover, .spec-input:focus { border-bottom-color: var(--border-mid); }
   .spec-input.qty { width: 56px; }
-
-  /* Add row */
-  .add-row { padding: 1.5rem 3.5rem; border-bottom: 0.5px solid var(--border); background: var(--white); }
-
-  .add-btn {
-    font-family: 'Jost', sans-serif;
-    font-size: 9px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    font-weight: 400;
-    color: var(--ink-faint);
-    background: none;
-    border: 0.5px dashed var(--border-mid);
-    padding: 10px 18px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: color 0.15s, border-color 0.15s;
-    width: 100%;
-    justify-content: center;
-  }
-
+  .add-row { padding: 1.5rem 3.5rem; background: var(--white); }
+  .add-btn { font-family: 'Jost', sans-serif; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 400; color: var(--ink-faint); background: none; border: 0.5px dashed var(--border-mid); padding: 10px 18px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: color 0.15s, border-color 0.15s; width: 100%; justify-content: center; }
   .add-btn:hover { color: var(--ink-mid); border-color: var(--gold-light); }
   .add-btn i { font-size: 12px; }
-
-  /* Footer */
-  .guide-footer {
-    padding: 2.75rem 3.5rem 2.25rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    background: var(--white);
-  }
-
-  .contact-grid {
-    display: grid;
-    grid-template-columns: auto auto;
-    gap: 0 3.5rem;
-  }
-
-  .contact-field { display: flex; flex-direction: column; margin-bottom: 0; gap: 4px; padding-bottom: 0; }
-  .contact-field + .contact-field { margin-top: 14px; }
-
-  .contact-label {
-    font-size: 8px;
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
-    color: var(--gold);
-    font-weight: 400;
-  }
-
-  .contact-input {
-    font-family: 'Jost', sans-serif;
-    font-size: 12px;
-    font-weight: 300;
-    color: var(--ink-mid);
-    background: transparent;
-    border: none;
-    border-bottom: 0.5px solid transparent;
-    outline: none;
-    padding: 1px 0;
-    transition: border-color 0.15s, color 0.15s;
-    width: 220px;
-  }
-
+  .guide-footer { padding: 2.75rem 3.5rem 2.25rem; display: flex; justify-content: space-between; align-items: flex-end; background: var(--white); }
+  .contact-grid { display: grid; grid-template-columns: auto auto; gap: 0 3.5rem; }
+  .contact-field { display: flex; flex-direction: column; gap: 4px; margin-bottom: 14px; }
+  .contact-label { font-size: 8px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--gold); font-weight: 400; }
+  .contact-input { font-family: 'Jost', sans-serif; font-size: 12px; font-weight: 300; color: var(--ink-mid); background: transparent; border: none; border-bottom: 0.5px solid transparent; outline: none; padding: 1px 0; transition: border-color 0.15s, color 0.15s; width: 220px; }
   .contact-input:hover, .contact-input:focus { border-bottom-color: var(--border-mid); color: var(--ink); }
-
-  .footer-brand {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 17px;
-    font-style: italic;
-    color: var(--gold-light);
-    font-weight: 400;
-    letter-spacing: 0.02em;
-  }
-
-  @media print {
-    body { background: white; padding: 0; }
-    .guide { border: none; box-shadow: none; max-width: 100%; }
-    .toolbar, .add-row, .card-delete, .img-delete { display: none !important; }
-    .fixture-card { break-inside: avoid; }
-    .spec-input, .contact-input, .fixture-id-input { border-bottom: none !important; }
-    .img-slot i, .img-slot span { display: none; }
-  }
-
-  @media print {
-    body { background: white; padding: 0; }
-    .guide { border: none; max-width: 100%; }
-    .toolbar, .add-row, .card-delete, .img-delete { display: none !important; }
-    .fixture-card { break-inside: avoid; }
-    .spec-input, .contact-input, .fixture-id-input { border-bottom: none !important; }
-    .img-slot i, .img-slot span { display: none; }
-  }
+  .footer-brand { font-family: 'Cormorant Garamond', serif; font-size: 17px; font-style: italic; color: var(--gold-light); font-weight: 400; letter-spacing: 0.02em; }
 </style>
 </head>
 <body>
@@ -377,7 +72,7 @@
   <div class="guide-header">
     <div class="header-project">
       <h1 contenteditable="true" spellcheck="false">Client Project Name</h1>
-      <p class="subtitle" contenteditable="true" spellcheck="false" style="outline:none;border-bottom:0.5px solid transparent;transition:border-color 0.15s;" onfocus="this.style.borderBottomColor='rgba(42,40,36,0.25)'" onblur="this.style.borderBottomColor='transparent'">Decorative Lamping Guide</p>
+      <p class="subtitle" contenteditable="true" spellcheck="false" style="outline:none;">Decorative Lamping Guide</p>
     </div>
     <div class="header-meta">
       <p class="date" id="guide-date"></p>
@@ -386,13 +81,13 @@
   </div>
 
   <div class="toolbar">
+    <button class="toolbar-btn" onclick="addFixture()"><i class="ti ti-plus"></i> Add Fixture</button>
+    <button class="toolbar-btn" onclick="newGuide()"><i class="ti ti-file-plus"></i> New</button>
     <button class="toolbar-btn" onclick="saveGuide()"><i class="ti ti-device-floppy"></i> Save</button>
     <label class="toolbar-btn" for="load-input"><i class="ti ti-folder-open"></i> Load</label>
-    <input id="load-input" type="file" accept=".json,application/json" style="display:none" onchange="loadGuide(this)">
-    <button class="toolbar-btn" onclick="newGuide()"><i class="ti ti-file-plus"></i> New</button>
-    <button class="toolbar-btn" onclick="addFixture()"><i class="ti ti-plus"></i> Add fixture</button>
+    <input id="load-input" type="file" accept=".lg" style="display:none" onchange="loadGuide(this)">
     <span class="toolbar-spacer"></span>
-    <button class="toolbar-btn primary" id="export-btn" onclick="exportPDF()"><i class="ti ti-download"></i> Export PDF</button>
+    <span class="toolbar-hint">Click any field to edit</span>
   </div>
 
   <div class="fixture-grid" id="fixture-grid"></div>
@@ -418,41 +113,24 @@
     </div>
     <p class="footer-brand">Lumber &amp; Light</p>
   </div>
-
-<!-- Save/Load Modal -->
-<div id="modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(30,28,25,0.45);z-index:100;align-items:center;justify-content:center;">
-  <div style="background:var(--white);padding:2.5rem;width:560px;max-width:90vw;position:relative;box-shadow:0 8px 40px rgba(30,28,25,0.18);">
-    <button onclick="closeModal()" style="position:absolute;top:12px;right:14px;background:none;border:none;cursor:pointer;font-size:16px;color:var(--ink-light);">✕</button>
-    <p id="modal-title" style="font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;font-family:'Jost',sans-serif;font-weight:400;"></p>
-    <textarea id="modal-textarea" spellcheck="false" style="width:100%;height:260px;font-family:monospace;font-size:11px;padding:10px;border:0.5px solid var(--border-mid);background:var(--cream);color:var(--ink);resize:vertical;outline:none;line-height:1.5;"></textarea>
-    <p id="modal-hint" style="font-size:10px;color:var(--ink-light);margin-top:8px;font-family:'Jost',sans-serif;"></p>
-    <div style="display:flex;gap:8px;margin-top:1.25rem;justify-content:flex-end;">
-      <button onclick="closeModal()" style="font-family:'Jost',sans-serif;font-size:9px;letter-spacing:0.16em;text-transform:uppercase;padding:7px 16px;border:0.5px solid var(--border-mid);background:var(--white);color:var(--ink-mid);cursor:pointer;">Cancel</button>
-      <button id="modal-action-btn" style="font-family:'Jost',sans-serif;font-size:9px;letter-spacing:0.16em;text-transform:uppercase;padding:7px 16px;border:0.5px solid var(--ink);background:var(--ink);color:var(--white);cursor:pointer;"></button>
-    </div>
-  </div>
-</div>
-
 </div>
 
 <script>
-  document.getElementById('guide-date').textContent = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  document.getElementById('guide-date').textContent = new Date().toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' });
 
   const defaultFixtures = [
-    { id: 'FF-12A/B', manufacturer: 'SATCO', product: 'S12430', sku: 'S12430', kelvin: '3000K', lumens: '1,500 Lumens', base: 'E26 / A19', qty: '1' },
-    { id: 'FF-14.1 — Small', manufacturer: 'Sylvania', product: '57022', sku: '40T4/G9/CL 120V', kelvin: '2900K', lumens: '510 Lumens', base: 'G9', qty: '1' },
-    { id: 'FF-14.2 — Medium', manufacturer: 'EmeryAllen', product: 'A19 7.0W DTW', sku: 'EA-A19-7.0W-E26-DTW-2718W', kelvin: '1800–2700K', lumens: '520 Lumens', base: 'E26 / A19', qty: '1' },
-    { id: 'FF-14.3 — Large', manufacturer: 'EmeryAllen', product: 'A19 7.0W DTW', sku: 'EA-A19-7.0W-E26-DTW-2718W', kelvin: '1800–2700K', lumens: '520 Lumens', base: 'E26 / A19', qty: '1' },
-    { id: 'FF-18', manufacturer: 'Tala', product: 'Candle E12 LED Bulb', sku: 'CAND-4W-2200K-E12-NT-120V', kelvin: '2200K', lumens: '300 Lumens', base: 'E12 / C11', qty: '1' },
-    { id: 'FF-37', manufacturer: 'Philips', product: '52551', sku: '8A19/PER/927-922/CL/G/E26/WGX 1FB T20', kelvin: '2200–2700K', lumens: '800 Lumens', base: 'E26 / A19', qty: '1' },
+    { id:'FF-12A/B', manufacturer:'SATCO', product:'S12430', sku:'S12430', kelvin:'3000K', lumens:'1,500 Lumens', base:'E26 / A19', qty:'1' },
+    { id:'FF-14.1 — Small', manufacturer:'Sylvania', product:'57022', sku:'40T4/G9/CL 120V', kelvin:'2900K', lumens:'510 Lumens', base:'G9', qty:'1' },
+    { id:'FF-14.2 — Medium', manufacturer:'EmeryAllen', product:'A19 7.0W DTW', sku:'EA-A19-7.0W-E26-DTW-2718W', kelvin:'1800–2700K', lumens:'520 Lumens', base:'E26 / A19', qty:'1' },
+    { id:'FF-14.3 — Large', manufacturer:'EmeryAllen', product:'A19 7.0W DTW', sku:'EA-A19-7.0W-E26-DTW-2718W', kelvin:'1800–2700K', lumens:'520 Lumens', base:'E26 / A19', qty:'1' },
+    { id:'FF-18', manufacturer:'Tala', product:'Candle E12 LED Bulb', sku:'CAND-4W-2200K-E12-NT-120V', kelvin:'2200K', lumens:'300 Lumens', base:'E12 / C11', qty:'1' },
+    { id:'FF-37', manufacturer:'Philips', product:'52551', sku:'8A19/PER/927-922/CL/G/E26/WGX 1FB T20', kelvin:'2200–2700K', lumens:'800 Lumens', base:'E26 / A19', qty:'1' },
   ];
 
   const imgStore = {};
   let fixtures = JSON.parse(JSON.stringify(defaultFixtures));
 
-  function esc(s) {
-    return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  }
+  function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
   function makeCard(f, i) {
     const card = document.createElement('div');
@@ -461,19 +139,11 @@
       <button class="card-delete" onclick="removeFixture(${i})">✕</button>
       <input class="fixture-id-input" type="text" value="${esc(f.id)}" placeholder="Fixture ID" onchange="fixtures[${i}].id=this.value">
       <div class="card-images">
-        <div class="img-slot" id="fixture-img-${i}"
-          onclick="uploadImg(${i},'fixture')"
-          ondragover="handleDragOver(event)"
-          ondragleave="handleDragLeave(event)"
-          ondrop="handleDrop(event,${i},'fixture')">
+        <div class="img-slot" id="fixture-img-${i}" onclick="uploadImg(${i},'fixture')" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event,${i},'fixture')">
           <i class="ti ti-lamp"></i><span>Fixture</span>
           <button class="img-delete" onclick="clearImg(event,${i},'fixture')">✕</button>
         </div>
-        <div class="img-slot" id="bulb-img-${i}"
-          onclick="uploadImg(${i},'bulb')"
-          ondragover="handleDragOver(event)"
-          ondragleave="handleDragLeave(event)"
-          ondrop="handleDrop(event,${i},'bulb')">
+        <div class="img-slot" id="bulb-img-${i}" onclick="uploadImg(${i},'bulb')" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event,${i},'bulb')">
           <i class="ti ti-bulb"></i><span>Bulb</span>
           <button class="img-delete" onclick="clearImg(event,${i},'bulb')">✕</button>
         </div>
@@ -507,17 +177,88 @@
   }
 
   function addFixture() {
-    fixtures.push({ id: 'New Fixture', manufacturer: '', product: '', sku: '', kelvin: '', lumens: '', base: '', qty: '1' });
-    // ── File-based Save / Load ───────────────────────────────────
+    fixtures.push({ id:'New Fixture', manufacturer:'', product:'', sku:'', kelvin:'', lumens:'', base:'', qty:'1' });
+    renderGrid();
+    const cards = document.querySelectorAll('.fixture-card');
+    const last = cards[cards.length-1];
+    if (last) { last.scrollIntoView({ behavior:'smooth', block:'center' }); last.querySelector('.fixture-id-input')?.focus(); }
+  }
 
+  function removeFixture(i) {
+    fixtures.splice(i, 1);
+    const newStore = {};
+    Object.entries(imgStore).forEach(([k,v]) => {
+      const [idx,type] = k.split('-'); const n = parseInt(idx);
+      if (n < i) newStore[k] = v;
+      else if (n > i) newStore[`${n-1}-${type}`] = v;
+    });
+    Object.keys(imgStore).forEach(k => delete imgStore[k]);
+    Object.assign(imgStore, newStore);
+    renderGrid();
+  }
+
+  function handleDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect='copy'; e.currentTarget.classList.add('drag-over'); }
+  function handleDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
+
+  function compressImage(dataUrl, maxW=800) {
+    return new Promise(resolve => {
+      const img = new Image();
+      img.onload = () => {
+        const scale = Math.min(1, maxW/img.width);
+        const c = document.createElement('canvas');
+        c.width = Math.round(img.width*scale); c.height = Math.round(img.height*scale);
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        resolve(c.toDataURL('image/jpeg', 0.82));
+      };
+      img.onerror = () => resolve(dataUrl);
+      img.src = dataUrl;
+    });
+  }
+
+  function setImg(i, type, data) {
+    imgStore[`${i}-${type}`] = data;
+    const slot = document.getElementById(`${type}-img-${i}`);
+    if (slot) slot.innerHTML = `<img src="${data}" alt="${type}"><button class="img-delete" onclick="clearImg(event,${i},'${type}')">✕</button>`;
+  }
+
+  function uploadImg(i, type) {
+    const input = document.createElement('input');
+    input.type='file'; input.accept='image/*';
+    input.onchange = e => {
+      const file = e.target.files[0]; if (!file) return;
+      const r = new FileReader();
+      r.onload = async ev => setImg(i, type, await compressImage(ev.target.result));
+      r.readAsDataURL(file);
+    };
+    input.click();
+  }
+
+  async function handleDrop(e, i, type) {
+    e.preventDefault(); e.stopPropagation();
+    e.currentTarget.classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (!file || !file.type.startsWith('image/')) return;
+    const r = new FileReader();
+    r.onload = async ev => setImg(i, type, await compressImage(ev.target.result));
+    r.readAsDataURL(file);
+  }
+
+  function clearImg(e, i, type) {
+    e.stopPropagation();
+    delete imgStore[`${i}-${type}`];
+    const slot = document.getElementById(`${type}-img-${i}`);
+    const icon = type==='fixture' ? 'ti-lamp' : 'ti-bulb';
+    if (slot) slot.innerHTML = `<i class="ti ${icon}"></i><span>${type}</span><button class="img-delete" onclick="clearImg(event,${i},'${type}')">✕</button>`;
+  }
+
+  // ── Save / Load ───────────────────────────────────────────────
   function getState() {
     return {
       projectName:  document.querySelector('h1').textContent.trim(),
       contactName:  document.getElementById('contact-name').value,
       contactEmail: document.getElementById('contact-email').value,
       contactPhone: document.getElementById('contact-phone').value,
-      fixtures,
-      imgStore
+      fixtures, imgStore
     };
   }
 
@@ -531,58 +272,44 @@
     renderGrid();
   }
 
-  async function saveGuide() {
+  function saveGuide() {
     const state = getState();
-    const json = JSON.stringify(state, null, 2);
-    const filename = (state.projectName || 'Lamping_Guide').replace(/[^a-z0-9_\-\s]/gi,'').trim().replace(/\s+/g,'_') + '.json';
-
-    // Try File System Access API (Chrome/Brave/Edge — shows real Save dialog)
+    const json = JSON.stringify(state);
+    const filename = (state.projectName || 'Lamping_Guide').replace(/[^a-z0-9_\-\s]/gi,'').trim().replace(/\s+/g,'_') + '.lg';
+    // Use showSaveFilePicker if available (Chrome, Edge, Brave with shields down)
     if (window.showSaveFilePicker) {
-      try {
-        const fh = await window.showSaveFilePicker({
-          suggestedName: filename,
-          types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }]
-        });
-        const writable = await fh.createWritable();
-        await writable.write(json);
-        await writable.close();
-        const btn = document.querySelector('.toolbar-btn[onclick="saveGuide()"]');
-        const orig = btn.innerHTML;
-        btn.innerHTML = '<i class="ti ti-check"></i> Saved';
-        setTimeout(() => btn.innerHTML = orig, 1500);
-        return;
-      } catch(e) {
-        if (e.name === 'AbortError') return; // user cancelled
-      }
-    }
-
-    // Fallback — open JSON in new tab, user presses Cmd/Ctrl+S
-    const w = window.open('', '_blank');
-    if (w) {
-      w.document.open();
-      w.document.write('<pre>' + json.replace(/</g,'&lt;') + '</pre>');
-      w.document.close();
-      w.document.title = filename;
-      alert('Press Cmd+S (Mac) or Ctrl+S (Windows) in the new tab to save the file.');
+      window.showSaveFilePicker({
+        suggestedName: filename,
+        types: [{ description: 'Lamping Guide', accept: { 'application/octet-stream': ['.lg'] } }]
+      }).then(fh => fh.createWritable()).then(w => w.write(json).then(() => w.close())).catch(() => fallbackSave(json, filename));
     } else {
-      alert('Could not open save dialog. Please allow popups for this page.');
+      fallbackSave(json, filename);
+    }
+  }
+
+  function fallbackSave(json, filename) {
+    // Last resort — copy to clipboard and alert
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(json).then(() => {
+        alert('Your browser blocked the file download.\n\nYour guide data has been copied to clipboard.\nPaste it into a text file and save it as "' + filename + '".');
+      });
+    } else {
+      alert('Your browser blocked the file download. Please use Chrome or Edge for file saving.');
     }
   }
 
   function loadGuide(input) {
     const file = input.files[0]; if (!file) return;
-    const reader = new FileReader();
-    reader.onload = ev => {
-      try {
-        applyState(JSON.parse(ev.target.result));
-        input.value = ''; // reset so same file can be loaded again
-      } catch(err) { alert('Could not load file: ' + err.message); }
+    const r = new FileReader();
+    r.onload = ev => {
+      try { applyState(JSON.parse(ev.target.result)); input.value = ''; }
+      catch(err) { alert('Could not load file: ' + err.message); }
     };
-    reader.readAsText(file);
+    r.readAsText(file);
   }
 
   function newGuide() {
-    if (!confirm('Start a new guide? Unsaved changes will be lost.')) return;
+    if (!confirm('Start a new guide? Save first if you have unsaved changes.')) return;
     Object.keys(imgStore).forEach(k => delete imgStore[k]);
     fixtures = JSON.parse(JSON.stringify(defaultFixtures));
     document.querySelector('h1').textContent = 'Client Project Name';
@@ -592,238 +319,8 @@
     renderGrid();
   }
 
-  // Compress images on upload/drop
-  function compressImage(dataUrl, maxW=800) {
-    return new Promise(resolve => {
-      const img = new Image();
-      img.onload = () => {
-        const scale = Math.min(1, maxW / img.width);
-        const c = document.createElement('canvas');
-        c.width = Math.round(img.width * scale);
-        c.height = Math.round(img.height * scale);
-        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
-        resolve(c.toDataURL('image/jpeg', 0.82));
-      };
-      img.onerror = () => resolve(dataUrl);
-      img.src = dataUrl;
-    });
-  }
-
-  window.uploadImg = function(i, type) {
-    const input = document.createElement('input');
-    input.type = 'file'; input.accept = 'image/*';
-    input.onchange = e => {
-      const file = e.target.files[0]; if (!file) return;
-      const reader = new FileReader();
-      reader.onload = async ev => {
-        const compressed = await compressImage(ev.target.result);
-        imgStore[`${i}-${type}`] = compressed;
-        const slot = document.getElementById(`${type}-img-${i}`);
-        if (slot) slot.innerHTML = `<img src="${compressed}" alt="${type}"><button class="img-delete" onclick="clearImg(event,${i},'${type}')">✕</button>`;
-      };
-      reader.readAsDataURL(file);
-    };
-    input.click();
-  };
-
-  window.handleDrop = async function(e, i, type) {
-    e.preventDefault(); e.stopPropagation();
-    e.currentTarget.classList.remove('drag-over');
-    const file = e.dataTransfer.files[0];
-    if (!file || !file.type.startsWith('image/')) return;
-    const reader = new FileReader();
-    reader.onload = async ev => {
-      const compressed = await compressImage(ev.target.result);
-      imgStore[`${i}-${type}`] = compressed;
-      const slot = document.getElementById(`${type}-img-${i}`);
-      if (slot) slot.innerHTML = `<img src="${compressed}" alt="${type}"><button class="img-delete" onclick="clearImg(event,${i},'${type}')">✕</button>`;
-    };
-    reader.readAsDataURL(file);
-  };
-
   // ── Init ─────────────────────────────────────────────────────
   fixtures = JSON.parse(JSON.stringify(defaultFixtures));
-  renderGrid();
-    const cards = document.querySelectorAll('.fixture-card');
-    const last = cards[cards.length - 1];
-    if (last) { last.scrollIntoView({ behavior: 'smooth', block: 'center' }); last.querySelector('.fixture-id-input')?.focus(); }
-  }
-
-  function removeFixture(i) {
-    fixtures.splice(i, 1);
-    const newStore = {};
-    Object.entries(imgStore).forEach(([k, v]) => {
-      const [idx, type] = k.split('-');
-      const n = parseInt(idx);
-      if (n < i) newStore[k] = v;
-      else if (n > i) newStore[`${n-1}-${type}`] = v;
-    });
-    Object.keys(imgStore).forEach(k => delete imgStore[k]);
-    Object.assign(imgStore, newStore);
-    renderGrid();
-  }
-
-  function handleDragOver(e) {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'copy';
-    e.currentTarget.classList.add('drag-over');
-  }
-
-  function handleDragLeave(e) {
-    e.currentTarget.classList.remove('drag-over');
-  }
-
-  function handleDrop(e, i, type) {
-    e.preventDefault();
-    e.stopPropagation();
-    e.currentTarget.classList.remove('drag-over');
-    const file = e.dataTransfer.files[0];
-    if (!file || !file.type.startsWith('image/')) return;
-    const reader = new FileReader();
-    reader.onload = ev => {
-      imgStore[`${i}-${type}`] = ev.target.result;
-      const slot = document.getElementById(`${type}-img-${i}`);
-      if (slot) slot.innerHTML = `<img src="${ev.target.result}" alt="${type}"><button class="img-delete" onclick="clearImg(event,${i},'${type}')">✕</button>`;
-    };
-    reader.readAsDataURL(file);
-  }
-
-  function uploadImg(i, type) {
-    const input = document.createElement('input');
-    input.type = 'file'; input.accept = 'image/*';
-    input.onchange = e => {
-      const file = e.target.files[0]; if (!file) return;
-      const reader = new FileReader();
-      reader.onload = ev => {
-        imgStore[`${i}-${type}`] = ev.target.result;
-        const slot = document.getElementById(`${type}-img-${i}`);
-        if (slot) slot.innerHTML = `<img src="${ev.target.result}" alt="${type}"><button class="img-delete" onclick="clearImg(event,${i},'${type}')">✕</button>`;
-      };
-      reader.readAsDataURL(file);
-    };
-    input.click();
-  }
-
-  function clearImg(e, i, type) {
-    e.stopPropagation();
-    delete imgStore[`${i}-${type}`];
-    const slot = document.getElementById(`${type}-img-${i}`);
-    const icon = type === 'fixture' ? 'ti-lamp' : 'ti-bulb';
-    const label = type === 'fixture' ? 'Fixture' : 'Bulb';
-    if (slot) slot.innerHTML = `<i class="ti ${icon}"></i><span>${label}</span><button class="img-delete" onclick="clearImg(event,${i},'${type}')">✕</button>`;
-  }
-
-  async function exportPDF() {
-    const btn = document.getElementById('export-btn');
-    btn.textContent = 'Generating…'; btn.disabled = true;
-    try {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'letter' });
-      const PW = 215.9, PH = 279.4, M = 18, CW = PW - M * 2;
-      let y = M;
-      const INK = [30,28,25], MID = [92,89,85], LIGHT = [158,155,150], FAINT = [206,201,194], GOLD = [154,138,106];
-
-      function rule(yy) { doc.setDrawColor(...FAINT); doc.setLineWidth(0.15); doc.line(M, yy, PW-M, yy); }
-      function newPageIfNeeded(h) { if (y + h > PH - M) { doc.addPage(); y = M; } }
-
-      const projectName = document.querySelector('h1').textContent.trim() || 'Client Project Name';
-      const dateStr = document.getElementById('guide-date').textContent;
-
-      // Header
-      doc.setFont('helvetica','normal'); doc.setFontSize(28); doc.setTextColor(...INK);
-      doc.text(projectName, M, y + 10);
-      doc.setFontSize(7); doc.setTextColor(...GOLD);
-      doc.text('DECORATIVE LAMPING GUIDE', M, y + 17);
-      doc.setFontSize(8); doc.text(dateStr, PW-M, y+10, { align:'right' });
-      doc.setFont('helvetica','italic'); doc.setFontSize(11);
-      doc.text('Lumber & Light', PW-M, y+17, { align:'right' });
-      y += 26; rule(y); y += 8;
-
-      const colW = (CW - 6) / 2;
-      const LABELS = ['Manufacturer','Product Name','SKU','Kelvin','Lumens','Base / Shape','Qty per fixture'];
-      const KEYS   = ['manufacturer','product','sku','kelvin','lumens','base','qty'];
-      const rowH = 5.5, imgH = colW * 0.26, imgW2 = (colW - 3) / 2;
-      const cardH = 5 + imgH + LABELS.length * rowH + 8;
-
-      for (let i = 0; i < fixtures.length; i += 2) {
-        newPageIfNeeded(cardH + 6);
-        const pairs = [{ f: fixtures[i], x: M, idx: i }];
-        if (fixtures[i+1]) pairs.push({ f: fixtures[i+1], x: M + colW + 6, idx: i+1 });
-
-        pairs.forEach(({ f, x, idx }) => {
-          let cy = y;
-          // Fixture ID
-          doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor(...MID);
-          doc.text((f.id||'').toUpperCase(), x, cy + 4);
-          cy += 7;
-
-          // Images
-          ['fixture','bulb'].forEach((type, t) => {
-            const ix = x + t * (imgW2 + 3);
-            const b64 = imgStore[`${idx}-${type}`];
-            if (b64) {
-              try {
-                const fmt = b64.startsWith('data:image/png') ? 'PNG' : 'JPEG';
-                doc.addImage(b64, fmt, ix, cy, imgW2, imgH);
-              } catch(e) {
-                doc.setFillColor(245,243,238); doc.rect(ix, cy, imgW2, imgH, 'F');
-                doc.setDrawColor(...FAINT); doc.rect(ix, cy, imgW2, imgH, 'S');
-              }
-            } else {
-              doc.setFillColor(245,243,238); doc.rect(ix, cy, imgW2, imgH, 'F');
-              doc.setDrawColor(...FAINT); doc.setLineWidth(0.15); doc.rect(ix, cy, imgW2, imgH, 'S');
-              doc.setFontSize(6); doc.setTextColor(...LIGHT);
-              doc.text(type.toUpperCase(), ix + imgW2/2, cy + imgH/2 + 1, { align:'center' });
-            }
-          });
-          cy += imgH + 3;
-
-          // Spec rows — dynamic height to handle wrapping
-          LABELS.forEach((lbl, li) => {
-            const val = String(f[KEYS[li]] || '—');
-            const valMaxW = colW * 0.62;
-            doc.setFontSize(7);
-            const lines = doc.splitTextToSize(val, valMaxW);
-            const dynH = Math.max(rowH, lines.length * 4 + 3);
-            const midY = cy + dynH / 2;
-            // divider above each row except first
-            if (li > 0) { doc.setDrawColor(...FAINT); doc.setLineWidth(0.1); doc.line(x, cy, x + colW, cy); }
-            doc.setFont('helvetica','normal'); doc.setFontSize(5.5); doc.setTextColor(...LIGHT);
-            doc.text(lbl.toUpperCase(), x, midY + 1);
-            doc.setFontSize(7); doc.setTextColor(...INK);
-            const textY = lines.length > 1 ? midY - ((lines.length - 1) * 2) : midY + 1;
-            doc.text(lines, x + colW, textY, { align: 'right' });
-            cy += dynH;
-          });
-        });
-
-        y += cardH; rule(y); y += 4;
-      }
-
-      // Footer
-      newPageIfNeeded(20);
-      rule(y); y += 6;
-      const name  = document.getElementById('contact-name').value;
-      const email = document.getElementById('contact-email').value;
-      const phone = document.getElementById('contact-phone').value;
-      doc.setFontSize(6); doc.setTextColor(...GOLD);
-      doc.text('POINT OF CONTACT', M, y+3);
-      doc.text('EMAIL', M+55, y+3);
-      doc.text('TELEPHONE', M+110, y+3);
-      doc.setFontSize(8); doc.setTextColor(...MID);
-      doc.text(name, M, y+8); doc.text(email, M+55, y+8); doc.text(phone, M+110, y+8);
-      doc.setFont('helvetica','italic'); doc.setFontSize(11); doc.setTextColor(...LIGHT);
-      doc.text('Lumber & Light', PW-M, y+8, { align:'right' });
-
-      const filename = (projectName.replace(/\s+/g,'_')||'Lamping') + '_Lamping_Guide.pdf';
-      doc.save(filename);
-    } catch(err) {
-      alert('PDF export failed: ' + err.message);
-    }
-    btn.innerHTML = '<i class="ti ti-download"></i> Export PDF';
-    btn.disabled = false;
-  }
-
   renderGrid();
 </script>
 </body>
