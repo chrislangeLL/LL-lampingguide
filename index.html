@@ -70,13 +70,28 @@
     body { background: white; padding: 0; }
     .guide { border: none; box-shadow: none; max-width: 100%; }
     .toolbar, .add-row, .card-delete, .img-delete { display: none !important; }
+    .guide-header { padding: 1rem 2rem 0.75rem; }
+    .header-project h1 { font-size: 24px; margin-bottom: 4px; }
+    .header-meta .date { font-size: 9px; }
+    .header-meta .brand { font-size: 12px; }
+    .header-project .subtitle { font-size: 7px; }
     .fixture-grid { display: block !important; }
-    .print-page { display: grid; grid-template-columns: 1fr 1fr; break-inside: avoid; page-break-inside: avoid; break-before: auto; }
+    .print-page { display: grid; grid-template-columns: 1fr 1fr; break-inside: avoid; page-break-inside: avoid; }
     .print-page + .print-page { break-before: always; page-break-before: always; }
-    .fixture-card { break-inside: avoid; page-break-inside: avoid; }
-    .spec-input, .contact-input, .fixture-id-input { border-bottom: none !important; }
+    .fixture-card { break-inside: avoid; page-break-inside: avoid; padding: 1rem 2rem; }
+    .card-images { margin-bottom: 0.5rem; }
+    .img-slot { aspect-ratio: 3/2; }
+    .fixture-id-input { margin-bottom: 0.5rem; font-size: 8px; }
+    .spec-table td { padding: 3px 0; }
+    .spec-label { font-size: 7px; }
+    .spec-input { font-size: 10px; border-bottom: none !important; }
+    .contact-input, .fixture-id-input { border-bottom: none !important; }
     .img-slot i, .img-slot span { display: none; }
     .img-slot img { display: block; }
+    .guide-footer { padding: 1rem 2rem; }
+    .contact-label { font-size: 7px; }
+    .contact-input { font-size: 10px; }
+    .footer-brand { font-size: 12px; }
     .guide-header { break-after: avoid; page-break-after: avoid; }
     .guide-footer { break-before: avoid; page-break-before: avoid; }
   }
